@@ -11,6 +11,26 @@
       background: linear-gradient(to right, #f6d365, #fda085);
       color: #2c3e50;
     }
+
+    .main-content {
+      background-color: #ffffffcc;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    header, footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #6a11cb;
+      background-image: linear-gradient(315deg, #6a11cb 0%, #2575fc 74%);
+      color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
     .centered {
       text-align: center;
       font-weight: bold;
@@ -19,17 +39,6 @@
       border-radius: 8px;
       width: fit-content;
       margin: 20px auto;
-}
-
-    h1 {
-      background-color: #6a11cb;
-      background-image: linear-gradient(315deg, #6a11cb 0%, #2575fc 74%);
-      color: white;
-      padding: 20px;
-      border-radius: 10px;
-      text-align: center;
-      margin-bottom: 30px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
 
     a {
@@ -77,43 +86,114 @@
       font-weight: bold;
       margin: 8px 0;
     }
+
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 16px;
+      font-weight: bold;
+      background-color: #00cec9;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0984e3;
+    }
   </style>
 </head>
 <body>
 
-  <h1>Testing My Capabilities</h1>
+  <div class="main-content">
 
-  <a href="https://www.hitachirail.com">Home</a>
-  <p>
-    What does HTML Mean? Look at the Block Below!
-  </p>
-  <p>
-    HyperText Markup Language (HTML) is a markup language used to describe the structure of a web page.
-  </p>
+    <header>
+      <h1>Testing and Automating Awesome Products</h1>
+      <a href="https://www.hitachirail.com">Home</a>
+    </header>
 
-  <p class="centered">This is where the Hitachi Rail Testing Team works.</p>
+    <main>
+      <section>
+        <p>What does HTML Mean? Look at the Block Below!</p>
+        <p>HyperText Markup Language (HTML) is a markup language used to describe the structure of a web page.</p>
+      </section>
 
-  <img src="Hitachi_Pittsburgh.jpeg" alt="Hitachi">
+      <section>
+        <p class="centered">This is where the Automation Team works.</p>
+        <img src="Hitachi_Pittsburgh.jpeg" alt="Hitachi">
+      </section>
 
-  <img src="World_Map.webp" usemap="#worldmap" alt="World Map" width="600" height="400">
+      <section>
+        <img src="World_Map.webp" usemap="#worldmap" alt="World Map" width="600" height="400">
+        <map name="worldmap">
+          <area shape="rect" coords="100,50,200,150" href="https://en.wikipedia.org/wiki/North_America" alt="North America">
+        </map>
+      </section>
 
-  <map name="worldmap">
-    <area shape="rect" coords="100,50,200,150" href="https://en.wikipedia.org/wiki/North_America" alt="North America">
-  </map>
+      <section>
+        <p class="centered">Here is the List of Automation Fanatics!:</p>
 
-  <p class="centered"> Here is the List of our Python Folks in Pittsburgh!:</p>
+        <button onclick="toggleList()">Toggle Team List</button>
 
-  <ul>
-    <li>Alan</li>
-    <li>Mike B</li>
-    <li>Mike (The Guitar Man)</li>
-    <li>Tek</li>
-    <li>Sasha</li>
-  </ul>
+        <ul id="teamList">
+          <li>Belgium</li>
+          <li>Skier</li>
+          <li>The Guitar Man</li>
+          <li>Holiday Seeker</li>
+          <li>Trouble Maker</li>
+        </ul>
+      </section>
 
-  <p>
-    Want to <a href="https://www.w3schools.com/html/">learn more about web development?</a>
-  </p>
+      <section>
+        <button onclick="greetUser()">Say Hello to Us!</button>
+        <p id="greeting"></p>
+      </section>
+
+      <section>
+        <h2 style="text-align:center;">Current Date & Time</h2>
+        <p id="datetime" style="text-align:center; font-weight: bold; font-size: 1.2rem;"></p>
+      </section>
+
+      <section>
+        <p>Want to <a href="https://www.w3schools.com/html/">learn more about HTML and CSS</a></p>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 Automation Team. All rights reserved.</p>
+    </footer>
+
+  </div>
+
+  <script>
+    function toggleList() {
+      const list = document.getElementById("teamList");
+      list.style.display = (list.style.display === "none") ? "block" : "none";
+    }
+
+    function greetUser() {
+      document.getElementById("greeting").textContent = "Welcome to our Page! We are so glad you are here!";
+    }
+
+    function updateDateTime() {
+      const now = new Date();
+      const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true
+      };
+      document.getElementById("datetime").textContent = now.toLocaleString('en-US', options);
+    }
+
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+  </script>
 
 </body>
 </html>

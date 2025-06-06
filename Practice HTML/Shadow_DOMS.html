@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Shadow DOM Example</title>
+
+  <script>
+    class HelloButton extends HTMLElement {
+      constructor() {
+        super();
+        const shadow = this.attachShadow({ mode: 'open' });
+        shadow.innerHTML = `
+          <style>
+            button {
+              background: teal;
+              color: white;
+              padding: 10px 20px;
+              font-size: 16px;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+            }
+          </style>
+          <button id="sayHelloBtn">Say Hello</button>
+        `;
+
+        const button = shadow.querySelector('#sayHelloBtn');
+        button.addEventListener('click', () => {
+          alert('Hello from Shadow DOM!');
+        });
+      }
+    }
+
+    customElements.define('hello-button', HelloButton);
+  </script>
+</head>
+<body>
+  <hello-button></hello-button>
+</body>
+</html>
