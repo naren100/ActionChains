@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Saved Employees</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f4f4f4;
+    }
+
+    tr:hover {
+      background-color: #eef;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>Employee List</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Location</th>
+        <th>Project</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+      </tr>
+    </thead>
+    <tbody id="employeeBody"></tbody>
+  </table>
+
+  <script>
+    const data = JSON.parse(localStorage.getItem("employees") || "{}");
+    const tbody = document.getElementById("employeeBody");
+
+    for (const [id, emp] of Object.entries(data)) {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${id}</td>
+        <td>${emp.name}</td>
+        <td>${emp.status}</td>
+        <td>${emp.location}</td>
+        <td>${emp.project}</td>
+        <td>${emp.startDate}</td>
+        <td>${emp.endDate}</td>
+      `;
+      row.onclick = () => window.parent.postMessage({ employeeId: id }, "*");
+      tbody.appendChild(row);
+    }
+  </script>
+</body>
+</html>
+

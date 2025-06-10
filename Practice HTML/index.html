@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Employee Editor</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <style>
+    body {
+      display: flex;
+      height: 100vh;
+      margin: 0;
+      font-family: sans-serif;
+    }
+    .left {
+      flex: 1;
+      border-right: 2px solid #ccc;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .right {
+      flex: 1;
+      padding: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+    }
+    .radio-group {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+    }
+    .radio-group label {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+    }
+    #newEmployeeBtn {
+      margin-bottom: 20px;
+      padding: 8px 16px;
+      background-color: #90ee90;
+      border: none;
+      color: #1d3a1d;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    #newEmployeeBtn:hover {
+      background-color: #76d676;
+    }
+    #statusMsg {
+      color: green;
+      display: none;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="left">
+    <iframe id="employeeFrame" src="employee_table.html"></iframe>
+  </div>
+
+  <div class="right">
+    <h2>Employee Info</h2>
+    <button type="button" id="newEmployeeBtn">➕ New Employee</button>
+    <form id="empForm">
+      <div class="form-group">
+        <label for="empId">Employee ID</label>
+        <input type="number" id="empId" required />
+      </div>
+      <div class="form-group">
+        <label for="empName">Name</label>
+        <input type="text" id="empName" required />
+      </div>
+      <div class="form-group">
+        <label for="empStatus">Status</label>
+        <select id="empStatus">
+          <option value="Regular">Regular</option>
+          <option value="Temporary">Temporary</option>
+          <option value="Intern">Intern</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Location</label>
+        <div class="radio-group">
+          <label><input type="radio" name="empLocation" value="Pittsburgh"> Pittsburgh</label>
+          <label><input type="radio" name="empLocation" value="Other"> Other</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="empProject">Project</label>
+        <input type="text" id="empProject" required />
+      </div>
+      <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <input type="text" id="startDate" required />
+      </div>
+      <div class="form-group">
+        <label for="endDate">End Date</label>
+        <input type="text" id="endDate" required />
+      </div>
+      <button type="submit">Save</button>
+      <div id="statusMsg">Saved successfully.</div>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    flatpickr("#startDate", { dateFormat: "Y-m-d" });
+    flatpickr("#endDate", { dateFormat: "Y-m-d" });
+
+    const form = document.getElementById('empForm');
+    const msg = document.getElementById('statusMsg');
+    const iframe = document.getElementById('employeeFrame');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+
+      const id = document.getElementById('empId').value.trim();
+      const name = document.getElementById('empName').value.trim();
+      const status = document.getElementById('empStatus').value;
+      const location = document.querySelector('input[name="empLocation"]:checked')?.value;
+      const project = document.getElementById('empProject').value.trim();
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+
+      if (!id || !name || !location || !project || !startDate || !endDate) {
+        alert("All fields are required.");
+        return;
+      }
+
+      const allData = JSON.parse(localStorage.getItem("employees") || "{}");
+      allData[id] = { name, status, location, project, startDate, endDate };
+      localStorage.setItem("employees", JSON.stringify(allData));
+
+      msg.style.display = "block";
+      setTimeout(() => msg.style.display = "none", 2000);
+
+      setTimeout(() => {
+        iframe.contentWindow.location.reload();
+      }, 300);
+    });
+
+    window.addEventListener("message", (event) => {
+      const empId = event.data?.employeeId;
+      if (!empId) return;
+      const allData = JSON.parse(localStorage.getItem("employees") || "{}");
+      const emp = allData[empId];
+      if (!emp) return;
+
+      document.getElementById("empId").value = empId;
+      document.getElementById("empId").disabled = true;
+      document.getElementById("empName").value = emp.name;
+      document.getElementById("empStatus").value = emp.status;
+      document.getElementById("empProject").value = emp.project || "";
+      document.getElementById("startDate").value = emp.startDate || "";
+      document.getElementById("endDate").value = emp.endDate || "";
+
+      const radios = document.getElementsByName("empLocation");
+      radios.forEach(r => r.checked = r.value === emp.location);
+    });
+
+    document.getElementById("newEmployeeBtn").addEventListener("click", () => {
+      form.reset();
+      document.getElementById("empId").disabled = false;
+    });
+  </script>
+</body>
+</html>
